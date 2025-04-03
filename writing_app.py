@@ -6,31 +6,26 @@ import os
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 st.title("🔎 Reflective Writing")
-
 st.write("""
 In this exercise, you will write a short paragraph on this topic:
 **"Reflect on a time when you questioned or challenged a belief or idea. What prompted your thinking? What was the outcome?"**
 
-You will chat with the chatbot to help you organize your thoughts and think deeper about your experiences.
-Feel free to ask the chatbot anything. Once you feel ready, you can use the notes section below to draft your thoughts.
+Use the chatbot on the left to help organize your thoughts. On the right, you have space to work on a draft and then finalize your reflection.
 """)
 
-# Initialize chat history
+# Initialize session state for chatbot messages and user input
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
         {"role": "system", "content": "You are a helpful assistant for reflective writing exercises."}
     ]
-
 if "user_input" not in st.session_state:
     st.session_state["user_input"] = ""
 
-# Function to handle sending message
+# Function to handle sending chat messages
 def send_message():
     user_input = st.session_state.user_input
     if user_input.strip():
-        # Append user message
         st.session_state["messages"].append({"role": "user", "content": user_input})
-        # Get bot response
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-4",
@@ -39,39 +34,68 @@ def send_message():
             bot_message = response["choices"][0]["message"]["content"]
             st.session_state["messages"].append({"role": "assistant", "content": bot_message})
         except openai.OpenAIError as e:
-            bot_message = f"Error: {e}"
-            st.session_state["messages"].append({"role": "assistant", "content": bot_message})
-
-    # Reset user input
+            error_msg = f"Error: {e}"
+            st.session_state["messages"].append({"role": "assistant", "content": error_msg})
     st.session_state.user_input = ""
 
-# Display chat history
-st.subheader("Chat with the Bot")
-for msg in st.session_state["messages"]:
-    if msg["role"] == "user":
-        st.markdown(f"**You:** {msg['content']}")
-    else:
-        st.markdown(f"**Bot:** {msg['content']}")
+# Create a two-column layout
+col1, col2 = st.columns(2)
 
-st.write("---")
-st.text_input(
-    "Your Message",
-    placeholder="Ask me anything to organize your thoughts...",
-    key="user_input"
-)
-st.button("Send", on_click=send_message)
+# Left panel: Chatbot interface
+with col1:
+    st.subheader("Chat with the Bot")
+    # Display the chat history
+    for msg in st.session_state["messages"]:
+        if msg["role"] == "user":
+            st.markdown(f"**You:** {msg['content']}")
+        else:
+            st.markdown(f"**Bot:** {msg['content']}")
+    # Input for sending new messages
+    st.text_input(
+        "Your Message",
+        placeholder="Ask me anything to organize your thoughts...",
+        key="user_input",
+        on_change=send_message
+    )
 
-# Notes Section
-st.write("---")
-st.subheader("Notes")
-st.write("Use the space below to jot down ideas or even draft your reflection. This is just for your notes; it won't be submitted anywhere.")
-notes = st.text_area("Your Notes:", placeholder="Write your thoughts here...", height=200, key="notes_area")
+# Right panel: Draft notes and Final Submission
+with col2:
+    st.subheader("Draft Notes")
+    # Initialize draft notes session state if needed
+    if "draft_notes" not in st.session_state:
+        st.session_state["draft_notes"] = ""
+    draft_notes = st.text_area(
+        "Write your draft notes here...",
+        value=st.session_state["draft_notes"],
+        height=200,
+        key="draft_notes_area"
+    )
+    if st.button("Save Draft"):
+        if draft_notes.strip():
+            st.session_state["draft_notes"] = draft_notes
+            st.success("Draft notes saved locally.")
+        else:
+            st.error("Please write something in your draft notes before saving.")
+    
+    st.write("---")
+    
+    st.subheader("Final Submission")
+    # Initialize final submission session state if needed
+    if "final_submission" not in st.session_state:
+        st.session_state["final_submission"] = ""
+    final_submission = st.text_area(
+        "Write your final reflection here...",
+        value=st.session_state["final_submission"],
+        height=200,
+        key="final_submission_area"
+    )
+    if st.button("Submit Final"):
+        if final_submission.strip():
+            st.session_state["final_submission"] = final_submission
+            st.success("Your final version has been submitted!")
+        else:
+            st.error("Please write your final reflection before submitting.")
 
-if st.button("Submit Notes"):
-    if notes.strip():
-        st.success("Your notes have been saved (locally in session).")
-    else:
-        st.error("Please write something before submitting.")
 
 
 
