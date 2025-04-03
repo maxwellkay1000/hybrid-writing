@@ -5,10 +5,22 @@ import os
 # Set OpenAI API key
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-st.title("🔎 Reflective Writing")
+st.title("🔎 Story Writing Task")
 st.write("""
-In this exercise, you will write a short paragraph on this topic:
-**"Reflect on a time when you questioned or challenged a belief or idea. What prompted your thinking? What was the outcome?"**
+Story Writing Task
+In the text box below, please write a short story (about four sentences long) that includes the following three words: “stamp,” “send,” and “letter.”
+Be as creative as you can—your story can be any style you imagine.
+ 
+Important: You are required to use ChatGPT to help write your story. We have already set it up for you, and you must use it at least once during your writing process. You can use ChatGPT to help brainstorm, get information, improve phrasing, write or co-write the text of your story, or in any other way that is useful.
+
+You can prompt ChatGPT as many times and as often as you’d like. Feel free to copy and paste any parts from the interaction and edit them as much as you like if you want to change what ChatGPT wrote.
+ 
+Important reminders:
+Please use the same ChatGPT session and window throughout this task.
+Do not use any tool for writing other than ChatGPT.
+At the end of the session, please do not delete your session history.
+Once you feel ready, you may click the “Next” button to submit your story.
+
 
 Use the chatbot on the left to help organize your thoughts. On the right, you have space to work on a draft and then finalize your reflection.
 """)
