@@ -8,7 +8,7 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 st.title("🔎 Story Writing Task")
 st.write("""
 Story Writing Task
-In the text box below, please write a short story (about four sentences long) that includes the following three words: “stamp,” “send,” and “letter.”
+In the text box below, please write a short story (about four sentences long) that includes the following three words: **“stamp,” “send,” and “letter.”**
 Be as creative as you can—your story can be any style you imagine.
  
 Important: You are required to use the bot to help write your story. We have already set it up for you, and you must use it at least once during your writing process. You can use the bot to help brainstorm, get information, improve phrasing, write or co-write the text of your story, or in any other way that is useful.
@@ -72,7 +72,7 @@ with col1:
 
 # Right panel: Draft notes and Final Submission
 with col2:
-    st.subheader("Draft Notes")
+    st.subheader("Sketchpad")
     # Initialize draft notes session state if needed
     if "draft_notes" not in st.session_state:
         st.session_state["draft_notes"] = ""
