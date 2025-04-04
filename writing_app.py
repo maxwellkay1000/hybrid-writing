@@ -11,13 +11,13 @@ Story Writing Task
 In the text box below, please write a short story (about four sentences long) that includes the following three words: “stamp,” “send,” and “letter.”
 Be as creative as you can—your story can be any style you imagine.
  
-Important: You are required to use ChatGPT to help write your story. We have already set it up for you, and you must use it at least once during your writing process. You can use ChatGPT to help brainstorm, get information, improve phrasing, write or co-write the text of your story, or in any other way that is useful.
+Important: You are required to use the bot to help write your story. We have already set it up for you, and you must use it at least once during your writing process. You can use the bot to help brainstorm, get information, improve phrasing, write or co-write the text of your story, or in any other way that is useful.
 
-You can prompt ChatGPT as many times and as often as you’d like. Feel free to copy and paste any parts from the interaction and edit them as much as you like if you want to change what ChatGPT wrote.
+You can prompt the bot as many times and as often as you’d like. Feel free to copy and paste any parts from the interaction and edit them as much as you like if you want to change what the bot wrote.
  
 **Important reminders**:
-Please use the same ChatGPT session and window throughout this task.
-Do not use any tool for writing other than ChatGPT.
+Please use the same session and window throughout this task.
+Do not use any tool for writing other than the bot provided.
 At the end of the session, please do not delete your session history.
 Once you feel ready, you may click the “Next” button to submit your story.
 
