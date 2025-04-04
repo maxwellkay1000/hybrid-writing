@@ -15,7 +15,7 @@ Important: You are required to use ChatGPT to help write your story. We have alr
 
 You can prompt ChatGPT as many times and as often as you’d like. Feel free to copy and paste any parts from the interaction and edit them as much as you like if you want to change what ChatGPT wrote.
  
-Important reminders:
+**Important reminders**:
 Please use the same ChatGPT session and window throughout this task.
 Do not use any tool for writing other than ChatGPT.
 At the end of the session, please do not delete your session history.
@@ -28,7 +28,7 @@ Use the chatbot on the left to help organize your thoughts. On the right, you ha
 # Initialize session state for chatbot messages and user input
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
-        {"role": "system", "content": "You are a helpful assistant for reflective writing exercises."}
+        {"role": "system", "content": "How can I help you with writing the short story?"}
     ]
 if "user_input" not in st.session_state:
     st.session_state["user_input"] = ""
