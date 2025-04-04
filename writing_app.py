@@ -96,7 +96,7 @@ with col2:
     if "final_submission" not in st.session_state:
         st.session_state["final_submission"] = ""
     final_submission = st.text_area(
-        "Write your final reflection here...",
+        "Write your final version here...",
         value=st.session_state["final_submission"],
         height=200,
         key="final_submission_area"
@@ -106,7 +106,7 @@ with col2:
             st.session_state["final_submission"] = final_submission
             st.success("Your final version has been submitted!")
         else:
-            st.error("Please write your final reflection before submitting.")
+            st.error("Please write your final version before submitting.")
 
 
 
