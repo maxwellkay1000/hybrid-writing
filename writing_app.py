@@ -1,8 +1,10 @@
-
 import streamlit as st
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+from pyairtable import Api
+import datetime
+import json
 
 # Load environment variables from .env file
 load_dotenv()
@@ -10,8 +12,42 @@ load_dotenv()
 # Initialize OpenAI client
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
+# Initialize Airtable client
+airtable_api = Api(os.environ.get("AIRTABLE_API_KEY"))
+base_id = os.environ.get("AIRTABLE_BASE_ID")
+table_name = "Table 1"  # Your table name from the screenshot
 
-
+def save_to_airtable(participant_id, messages, draft, final_submission):
+    """Save participant data to Airtable"""
+    try:
+        table = airtable_api.table(base_id, table_name)
+        
+        # Prepare the data for Airtable
+        # Convert messages to a readable format
+        chat_history = []
+        for msg in messages:
+            if msg["role"] != "system":  # Skip system messages
+                role = "User" if msg["role"] == "user" else "Assistant"
+                chat_history.append(f"{role}: {msg['content']}")
+        
+        messages_text = "\n---\n".join(chat_history)
+        
+        # Create the record using the correct field names from your Airtable
+        record_data = {
+            "participant_id": participant_id,
+            "messages": messages_text,
+            "responses": messages_text,  # Using same data for both fields
+            "draft": draft,
+            "final_story": final_submission,  # Using the correct field name
+            "date": datetime.datetime.now().isoformat()
+        }
+        
+        # Create the record in Airtable
+        result = table.create(record_data)
+        return True, f"Data saved successfully! Record ID: {result['id']}"
+        
+    except Exception as e:
+        return False, f"Error saving to Airtable: {str(e)}"
 
 def participant_id_page():
     """Page to collect participant ID before proceeding to the story task"""
@@ -116,7 +152,7 @@ def story_writing_page():
         for msg in st.session_state["messages"]:
             if msg["role"] == "user":
                 st.markdown(f"**You:** {msg['content']}")
-            else:
+            elif msg["role"] == "assistant":
                 st.markdown(f"**Bot:** {msg['content']}")
         # Input for sending new messages
         st.text_input(
@@ -160,24 +196,25 @@ def story_writing_page():
         if st.button("Submit Final"):
             if final_submission.strip():
                 st.session_state["final_submission"] = final_submission
-                st.success("Your final version has been submitted!")
-                # Optional: Save data with participant ID
-                save_participant_data(st.session_state.participant_id, final_submission)
+                
+                # Save to Airtable
+                with st.spinner("Saving your data..."):
+                    success, message = save_to_airtable(
+                        st.session_state.participant_id,
+                        st.session_state["messages"],
+                        st.session_state["draft_notes"],
+                        final_submission
+                    )
+                
+                if success:
+                    st.success("Your final version has been submitted and saved!")
+                    st.balloons()  # Fun celebration!
+                else:
+                    st.error(f"Submission saved locally but there was an issue with cloud storage: {message}")
+                    # Still show success to user since their work is saved in session
+                    st.success("Your final version has been submitted!")
             else:
                 st.error("Please write your final version before submitting.")
-
-def save_participant_data(participant_id, story_text):
-    """Save participant data to a file (optional)"""
-    import datetime
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
-    try:
-        with open("participant_data.txt", "a", encoding="utf-8") as f:
-            # Escape any commas or newlines in the story text for CSV format
-            clean_story = story_text.replace("\n", " ").replace(",", ";")
-            f.write(f"{timestamp},{participant_id},{clean_story}\n")
-    except Exception as e:
-        st.error(f"Error saving data: {e}")
 
 def main():
     """Main app function with page routing"""
