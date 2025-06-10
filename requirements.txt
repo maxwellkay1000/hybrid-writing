@@ -1,6 +1,6 @@
 streamlit>=1.28
 langchain==0.0.343
-openai==0.28
+openai>=1.0.0
 
 anthropic>=0.3.0
 trubrics>=1.4.3
@@ -9,3 +9,5 @@ langchain-community
 
 pyairtable
 boto3
+
+python-dotenv

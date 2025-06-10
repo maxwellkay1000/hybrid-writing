@@ -1,9 +1,19 @@
 import streamlit as st
-import openai
+from openai import OpenAI
+
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Initialize OpenAI client
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+
+# For newer versions of openai library (v1.0+)
+from openai import OpenAI
 
 # Set OpenAI API key
-openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 st.title("🔎 Story Writing Task")
 st.write("""
@@ -39,11 +49,9 @@ def send_message():
     if user_input.strip():
         st.session_state["messages"].append({"role": "user", "content": user_input})
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=st.session_state["messages"]
-            )
-            bot_message = response["choices"][0]["message"]["content"]
+            response = client.chat.completions.create(model="gpt-4",
+            messages=st.session_state["messages"])
+            bot_message = response.choices[0].message.content
             st.session_state["messages"].append({"role": "assistant", "content": bot_message})
         except openai.OpenAIError as e:
             error_msg = f"Error: {e}"
@@ -88,9 +96,9 @@ with col2:
             st.success("Draft notes saved locally.")
         else:
             st.error("Please write something in your draft notes before saving.")
-    
+
     st.write("---")
-    
+
     st.subheader("Final Submission")
     # Initialize final submission session state if needed
     if "final_submission" not in st.session_state:
